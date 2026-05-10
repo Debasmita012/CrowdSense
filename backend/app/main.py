@@ -13,15 +13,15 @@ from fastapi.responses import Response, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from sse_starlette.sse import EventSourceResponse
 
-from detector import CrowdDetector
-from tracker import SimpleTracker
-from graph_builder import CrowdGraph
-from anomaly import AnomalyDetector
-from alert_engine import AlertEngine
-from utils import draw_boxes
-from predictor import FlowPredictor
-from report_generator import ReportGenerator
-from gcn import DynamicCrowdGCN
+from app.detector import CrowdDetector
+from app.tracker import SimpleTracker
+from app.graph_builder import CrowdGraph
+from app.anomaly import AnomalyDetector
+from app.alert_engine import AlertEngine
+from app.utils import draw_boxes
+from app.predictor import FlowPredictor
+from app.report_generator import ReportGenerator
+from app.gcn import DynamicCrowdGCN
 
 app = FastAPI()
 
@@ -77,16 +77,28 @@ async def upload_video(file: UploadFile = File(...)):
         "video_id": video_id
     }
 
-# Initialize AI Models globally to save memory
-detector = CrowdDetector()
-tracker = SimpleTracker()
-graph_builder = CrowdGraph()
-anomaly_detector = AnomalyDetector()
-alert_engine = AlertEngine()
-predictor = FlowPredictor(num_zones=100)
-gcn = DynamicCrowdGCN()
+# Global placeholders for AI Models (Lazy Loading)
+detector = None
+tracker = None
+graph_builder = None
+anomaly_detector = None
+alert_engine = None
+predictor = None
+gcn = None
+
+def load_models():
+    global detector, tracker, graph_builder, anomaly_detector, alert_engine, predictor, gcn
+    if detector is None:
+        detector = CrowdDetector()
+        tracker = SimpleTracker()
+        graph_builder = CrowdGraph()
+        anomaly_detector = AnomalyDetector()
+        alert_engine = AlertEngine()
+        predictor = FlowPredictor(num_zones=100)
+        gcn = DynamicCrowdGCN()
 
 async def generate_frames(video_id: str, request: Request):
+    load_models() # Ensure models are loaded
     state = video_states.get(video_id)
     if not state:
         yield {"event": "error", "data": "Video not found"}
