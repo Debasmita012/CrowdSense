@@ -5,6 +5,8 @@ import json
 import base64
 import asyncio
 import numpy as np
+import collections
+import time
 
 from fastapi import FastAPI, UploadFile, File, Request
 from fastapi.responses import Response, StreamingResponse
@@ -62,7 +64,12 @@ async def upload_video(file: UploadFile = File(...)):
         "alerts": [],
         "density_history": [],
         "zone_summary": [{"id": i, "max_density": 0} for i in range(100)],
-        "duration": "00:00"
+        "duration": "00:00",
+        "replay_buffer": collections.deque(maxlen=400),
+        "zone_capacity": {str(i): 50 for i in range(100)},
+        "flow_stats": {str(i): {"entries": 0, "exits": 0, "flow_rate": 0} for i in range(100)},
+        "id_zone_map": {},
+        "id_history": {}
     }
 
     return {
@@ -126,13 +133,43 @@ async def generate_frames(video_id: str, request: Request):
 
         draw_boxes(frame, tracked_people)
 
-        # Generate 10x10 Heatmap Grid
         grid = np.zeros((10, 10))
+        dwelled_ids = []
+        current_time = time.time()
+        
         for p in tracked_people:
             cx, cy = p['center']
+            tid = p['id']
             gx = min(int(cx / 96), 9)
             gy = min(int(cy / 54), 9)
             grid[gy, gx] += 1
+            
+            zone_id = str(gy * 10 + gx)
+            
+            # Flow Tracking
+            prev_zone = state["id_zone_map"].get(tid)
+            if prev_zone is not None and prev_zone != zone_id:
+                state["flow_stats"][prev_zone]["exits"] += 1
+                state["flow_stats"][zone_id]["entries"] += 1
+                # Simplified flow rate for demo (just entries + exits)
+                state["flow_stats"][zone_id]["flow_rate"] = state["flow_stats"][zone_id]["entries"] + state["flow_stats"][zone_id]["exits"]
+            state["id_zone_map"][tid] = zone_id
+            
+            # Dwell Tracking
+            if tid not in state["id_history"]:
+                state["id_history"][tid] = []
+            state["id_history"][tid].append({"pos": (cx, cy), "time": current_time})
+            
+            # Keep last 30 seconds of history (approx)
+            state["id_history"][tid] = [h for h in state["id_history"][tid] if current_time - h["time"] <= 30]
+            
+            if len(state["id_history"][tid]) > 10:
+                pts = np.array([h["pos"] for h in state["id_history"][tid]])
+                max_dist = np.max(np.linalg.norm(pts - pts[0], axis=1))
+                # If moved less than 20 pixels in last 30s
+                if max_dist < 20 and (current_time - state["id_history"][tid][0]["time"]) >= 25:
+                    dwelled_ids.append(tid)
+                    p["dwelled"] = True
             
         densities = grid.flatten()
         velocities = np.zeros((100,)) # mock velocity
@@ -163,8 +200,19 @@ async def generate_frames(video_id: str, request: Request):
             "alerts": alerts,
             "total_density": total_density,
             "graph": graph_data,
-            "gcn_scores": gcn_scores
+            "gcn_scores": gcn_scores,
+            "flow_stats": state["flow_stats"],
+            "zone_capacity": state["zone_capacity"],
+            "dwelled_ids": dwelled_ids
         }
+        
+        # Add to replay buffer (save small payload to avoid memory bloat)
+        replay_item = {
+            "timestamp": time.strftime("%H:%M:%S"),
+            "heatmap": densities.tolist(),
+            "alerts": alerts
+        }
+        state["replay_buffer"].append(replay_item)
 
         yield {
             "event": "message",
@@ -199,3 +247,22 @@ async def generate_report(video_id: str):
         media_type="application/pdf",
         headers={"Content-Disposition": f"attachment; filename=IncidentReport_{video_id}.pdf"}
     )
+
+@app.get("/replay/{video_id}")
+async def get_replay(video_id: str):
+    state = video_states.get(video_id)
+    if not state:
+        return {"error": "Video not found"}
+    return {"replay": list(state["replay_buffer"])}
+
+@app.post("/capacity/{video_id}")
+async def set_capacity(video_id: str, request: Request):
+    state = video_states.get(video_id)
+    if not state:
+        return {"error": "Video not found"}
+    data = await request.json()
+    zone_id = str(data.get("zone_id"))
+    capacity = data.get("capacity")
+    if zone_id in state["zone_capacity"]:
+        state["zone_capacity"][zone_id] = int(capacity)
+    return {"status": "success", "zone_capacity": state["zone_capacity"]}

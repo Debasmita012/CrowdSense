@@ -13,6 +13,9 @@ export function StreamProvider({ children }) {
   const [totalDensity, setTotalDensity] = useState(0);
   const [alerts, setAlerts] = useState([]);
   const [frameCount, setFrameCount] = useState(0);
+  const [flowStats, setFlowStats] = useState({});
+  const [zoneCapacity, setZoneCapacity] = useState({});
+  const [dwelledIds, setDwelledIds] = useState([]);
 
   const sseRef = useRef(null);
 
@@ -39,6 +42,9 @@ export function StreamProvider({ children }) {
         if (data.graph) setGraphData(data.graph);
         if (data.gcn_scores) setGcnScores(data.gcn_scores);
         if (typeof data.total_density === "number") setTotalDensity(data.total_density);
+        if (data.flow_stats) setFlowStats(data.flow_stats);
+        if (data.zone_capacity) setZoneCapacity(data.zone_capacity);
+        if (data.dwelled_ids) setDwelledIds(data.dwelled_ids);
         if (data.alerts && data.alerts.length > 0) {
           setAlerts((prev) => [...prev, ...data.alerts]);
         }
@@ -73,6 +79,9 @@ export function StreamProvider({ children }) {
         totalDensity,
         alerts,
         frameCount,
+        flowStats,
+        zoneCapacity,
+        dwelledIds,
       }}
     >
       {children}

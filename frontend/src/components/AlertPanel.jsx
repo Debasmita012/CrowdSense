@@ -7,11 +7,12 @@ export default function AlertPanel({ alerts, videoId }) {
   return (
     <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2>Live Alerts</h2>
+        <h2 style={{ fontFamily: "var(--font-serif)", color: "var(--text-bright)" }}>Live Alerts</h2>
         <button 
+          className="btn-ghost"
           onClick={handleGenerateReport} 
           disabled={!videoId}
-          style={{ background: 'var(--glass-bg)', border: '1px solid var(--accent-purple)', color: 'var(--accent-purple)', boxShadow: 'none' }}
+          style={{ padding: "8px 16px", fontSize: "0.85rem" }}
         >
           📄 Generate Incident Report (PDF)
         </button>
@@ -30,15 +31,15 @@ export default function AlertPanel({ alerts, videoId }) {
               style={{ 
                 padding: '12px 16px', 
                 borderRadius: '8px', 
-                background: isHigh ? 'rgba(239, 68, 68, 0.1)' : 'rgba(245, 158, 11, 0.1)',
-                borderLeft: `4px solid ${isHigh ? 'var(--accent-red)' : 'var(--accent-amber)'}`
+                background: isHigh ? 'rgba(217, 83, 79, 0.1)' : 'rgba(212, 175, 55, 0.1)',
+                borderLeft: `4px solid ${isHigh ? 'var(--accent-danger)' : 'var(--accent-warning)'}`
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                <strong style={{ color: isHigh ? '#fca5a5' : '#fcd34d' }}>{alert.type}</strong>
+                <strong style={{ color: isHigh ? 'var(--accent-danger)' : 'var(--accent-warning)' }}>{alert.type}</strong>
                 <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Frame: {alert.frame_idx}</span>
               </div>
-              <p style={{ fontSize: '0.9rem', margin: 0 }}>{alert.message}</p>
+              <p style={{ fontSize: '0.9rem', margin: 0, color: "var(--text-soft)" }}>{alert.message}</p>
             </div>
           );
         })}

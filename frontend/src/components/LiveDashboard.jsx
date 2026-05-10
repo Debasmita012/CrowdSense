@@ -125,9 +125,9 @@ export default function LiveDashboard({ videoId }) {
       {/* ── Video feed + breathing heatmap overlay ── */}
       <div
         className="glass-card"
-        style={{ padding: "0", overflow: "hidden", position: "relative", border: "1px solid rgba(255,255,255,0.1)" }}
+        style={{ padding: "0", overflow: "hidden", position: "relative", border: "1px solid var(--glass-border)", background: "var(--bg-card)" }}
       >
-        <div style={{ position: "relative", width: "100%", aspectRatio: "16/9", background: "#0a0a0a" }}>
+        <div style={{ position: "relative", width: "100%", aspectRatio: "16/9", background: "var(--bg-deep)" }}>
           {frame ? (
             <img
               src={frame}
@@ -170,12 +170,14 @@ export default function LiveDashboard({ videoId }) {
               position: "absolute",
               top: "12px",
               left: "12px",
-              background: "rgba(0,0,0,0.55)",
-              border: "1px solid rgba(255,255,255,0.1)",
+              background: "rgba(255,255,255,0.85)",
+              border: "1px solid rgba(140, 115, 98, 0.2)",
               borderRadius: "6px",
               padding: "4px 10px",
               fontSize: "0.75rem",
-              color: "var(--text-muted)",
+              color: "var(--text-bright)",
+              fontWeight: "600",
+              boxShadow: "0 2px 10px rgba(140, 115, 98, 0.1)",
               backdropFilter: "blur(8px)",
               display: "flex",
               alignItems: "center",
@@ -202,15 +204,14 @@ export default function LiveDashboard({ videoId }) {
 
       {/* ── LSTM Flow Prediction ── */}
       <div className="glass-card">
-        <h3 style={{ marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+        <h3 style={{ marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px", color: "var(--text-bright)", fontFamily: "var(--font-serif)" }}>
           <span
             style={{
               display: "inline-block",
               width: "8px",
               height: "8px",
               borderRadius: "50%",
-              background: "var(--accent-purple)",
-              boxShadow: "0 0 8px var(--accent-purple)",
+              background: "var(--accent-primary)",
             }}
           />
           LSTM Flow Prediction — Next 30s
@@ -266,10 +267,10 @@ export default function LiveDashboard({ videoId }) {
                     width: "100%",
                     height: `${heightPerc}%`,
                     background: isDanger
-                      ? "var(--accent-red)"
+                      ? "var(--accent-danger)"
                       : isWarning
-                      ? "var(--accent-amber)"
-                      : "var(--accent-purple)",
+                      ? "var(--accent-warning)"
+                      : "var(--accent-primary)",
                     borderRadius: "0 0 4px 4px",
                     transition: "height 0.3s ease, background 0.3s ease",
                   }}
@@ -281,15 +282,15 @@ export default function LiveDashboard({ videoId }) {
 
         <div style={{ display: "flex", gap: "16px", marginTop: "10px", fontSize: "0.78rem", color: "var(--text-muted)" }}>
           <span>
-            <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "var(--accent-purple)", marginRight: 4 }} />
+            <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "var(--accent-primary)", marginRight: 4 }} />
             Normal
           </span>
           <span>
-            <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "var(--accent-amber)", marginRight: 4 }} />
+            <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "var(--accent-warning)", marginRight: 4 }} />
             Amber Pre-Alert
           </span>
           <span>
-            <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "var(--accent-red)", marginRight: 4 }} />
+            <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "var(--accent-danger)", marginRight: 4 }} />
             Danger
           </span>
         </div>

@@ -36,13 +36,13 @@ function LiveGraph({ graphData, gcnScores }) {
     const linkSel = svg.select("g.links").selectAll("line").data(links);
     linkSel.exit().remove();
     const allLinks = linkSel.enter().append("line")
-      .attr("stroke", "rgba(255,255,255,0.08)").attr("stroke-width", 1.5)
+      .attr("stroke", "rgba(140, 115, 98, 0.2)").attr("stroke-width", 1.5)
       .merge(linkSel);
 
     const nodeSel = svg.select("g.nodes").selectAll("circle").data(nodes, (d) => d.id);
     nodeSel.exit().remove();
     const allNodes = nodeSel.enter().append("circle")
-      .attr("r", 8).attr("stroke", "rgba(255,255,255,0.2)").attr("stroke-width", 1)
+      .attr("r", 8).attr("stroke", "rgba(140, 115, 98, 0.3)").attr("stroke-width", 1)
       .merge(nodeSel);
 
     allNodes.attr("fill", (d) => {
@@ -58,7 +58,7 @@ function LiveGraph({ graphData, gcnScores }) {
     });
   }, [graphData, gcnScores]);
 
-  return <svg ref={svgRef} width="100%" height="450" style={{ display: "block", borderRadius: "24px", background: "rgba(0,0,0,0.4)" }} />;
+  return <svg ref={svgRef} width="100%" height="450" style={{ display: "block", borderRadius: "24px", background: "rgba(140, 115, 98, 0.05)", border: "1px solid var(--glass-border)" }} />;
 }
 
 export default function GraphPage() {
@@ -70,20 +70,20 @@ export default function GraphPage() {
 
   return (
     <div className="page">
-      <div className="page-header">
+      <div className="page-header" style={{ marginBottom: "20px" }}>
         <div>
-          <div className="feature-pill" style={{ color: "var(--accent-secondary)" }}>Network Intelligence</div>
-          <h1 className="page-title">Proximity Graph</h1>
+          <div className="feature-pill" style={{ color: "var(--accent-primary)", border: "1px solid var(--accent-primary)", display: "inline-block", padding: "6px 16px", borderRadius: "20px", fontSize: "0.85rem", fontWeight: "600", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "12px" }}>Network Intelligence</div>
+          <h1 className="page-title" style={{ fontFamily: "var(--font-serif)", color: "var(--text-bright)", fontSize: "2.5rem" }}>Proximity Graph</h1>
         </div>
       </div>
 
       {/* Modern Insight Panel */}
-      <div className="glass-card" style={{ padding: "30px", marginBottom: "40px", background: "linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, transparent 100%)", borderLeft: "4px solid var(--accent-primary)" }}>
+      <div className="glass-card" style={{ padding: "30px", marginBottom: "40px", background: "var(--bg-card)", borderLeft: "4px solid var(--accent-primary)", boxShadow: "0 4px 15px rgba(140, 115, 98, 0.05)" }}>
         <div style={{ display: "flex", gap: "24px", alignItems: "flex-start" }}>
-          <div style={{ fontSize: "3rem", background: "rgba(255,255,255,0.05)", padding: "20px", borderRadius: "24px" }}>⬡</div>
+          <div style={{ fontSize: "3rem", background: "rgba(140, 115, 98, 0.05)", padding: "20px", borderRadius: "24px" }}>⬡</div>
           <div>
-            <h3 style={{ fontSize: "1.4rem", marginBottom: "10px" }}>Collective Behavior Analysis</h3>
-            <p className="readable-text">
+            <h3 style={{ fontSize: "1.4rem", marginBottom: "10px", color: "var(--text-bright)", fontFamily: "var(--font-serif)" }}>Collective Behavior Analysis</h3>
+            <p className="readable-text" style={{ color: "var(--text-soft)" }}>
               The AI maps every person as a node. When individuals are within <strong>80 pixels</strong> of each other, 
               a proximity edge is formed. Our Graph Convolutional Network (GCN) then scans the entire social fabric 
               to detect turbulent movement patterns that traditional tracking would miss.
@@ -93,24 +93,24 @@ export default function GraphPage() {
       </div>
 
       {/* Visual Metric Pills */}
-      <div className="stats-row">
-        <div className="stat-card" style={{ background: "rgba(0,212,255,0.05)", borderColor: "rgba(0,212,255,0.2)" }}>
-          <span className="sc-val" style={{ color: "var(--accent-secondary)" }}>{nodes.length}</span>
-          <span className="sc-lbl">Active Nodes</span>
+      <div className="stats-row" style={{ display: "flex", gap: "20px", marginBottom: "40px" }}>
+        <div className="stat-card" style={{ flex: 1, background: "rgba(140, 115, 98, 0.05)", border: "1px solid rgba(140, 115, 98, 0.2)", padding: "20px", borderRadius: "16px", textAlign: "center" }}>
+          <span className="sc-val" style={{ display: "block", fontSize: "2.5rem", fontWeight: "800", color: "var(--accent-primary)" }}>{nodes.length}</span>
+          <span className="sc-lbl" style={{ fontSize: "0.85rem", color: "var(--text-soft)", textTransform: "uppercase", letterSpacing: "1px" }}>Active Nodes</span>
         </div>
-        <div className="stat-card" style={{ background: "rgba(124, 58, 237, 0.05)", borderColor: "rgba(124, 58, 237, 0.2)" }}>
-          <span className="sc-val" style={{ color: "var(--accent-primary)" }}>{edges.length}</span>
-          <span className="sc-lbl">Network Edges</span>
+        <div className="stat-card" style={{ flex: 1, background: "rgba(212, 175, 55, 0.05)", border: "1px solid rgba(212, 175, 55, 0.2)", padding: "20px", borderRadius: "16px", textAlign: "center" }}>
+          <span className="sc-val" style={{ display: "block", fontSize: "2.5rem", fontWeight: "800", color: "var(--accent-warning)" }}>{edges.length}</span>
+          <span className="sc-lbl" style={{ fontSize: "0.85rem", color: "var(--text-soft)", textTransform: "uppercase", letterSpacing: "1px" }}>Network Edges</span>
         </div>
-        <div className="stat-card" style={{ background: "rgba(255,46,99,0.05)", borderColor: "rgba(255,46,99,0.2)" }}>
-          <span className="sc-val" style={{ color: "var(--accent-danger)" }}>{avgScore}</span>
-          <span className="sc-lbl">Avg Risk Score</span>
+        <div className="stat-card" style={{ flex: 1, background: "rgba(217, 83, 79, 0.05)", border: "1px solid rgba(217, 83, 79, 0.2)", padding: "20px", borderRadius: "16px", textAlign: "center" }}>
+          <span className="sc-val" style={{ display: "block", fontSize: "2.5rem", fontWeight: "800", color: "var(--accent-danger)" }}>{avgScore}</span>
+          <span className="sc-lbl" style={{ fontSize: "0.85rem", color: "var(--text-soft)", textTransform: "uppercase", letterSpacing: "1px" }}>Avg Risk Score</span>
         </div>
       </div>
 
-      <div className="glass-card" style={{ padding: "10px" }}>
+      <div className="glass-card" style={{ padding: "10px", background: "var(--bg-card)", border: "1px solid var(--glass-border)" }}>
         <div style={{ padding: "20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <h3 style={{ fontWeight: "800" }}>Live Topology {!isStreaming && <span style={{ opacity: 0.4 }}>(Engine Idle)</span>}</h3>
+          <h3 style={{ fontWeight: "800", color: "var(--text-bright)", fontFamily: "var(--font-serif)" }}>Live Topology {!isStreaming && <span style={{ opacity: 0.4 }}>(Engine Idle)</span>}</h3>
           <div style={{ display: "flex", gap: "12px", fontSize: "0.75rem", fontWeight: "700" }}>
             <span style={{ color: "var(--accent-primary)" }}>● Normal</span>
             <span style={{ color: "var(--accent-warning)" }}>● Warning</span>
@@ -119,7 +119,7 @@ export default function GraphPage() {
         </div>
         <div style={{ position: "relative" }}>
           {!isStreaming || !graphData ? (
-            <div style={{ height: "450px", display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.2)", borderRadius: "24px", color: "var(--text-soft)" }}>
+            <div style={{ height: "450px", display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(140, 115, 98, 0.05)", borderRadius: "24px", color: "var(--text-soft)", border: "1px solid var(--glass-border)" }}>
               Waiting for AI stream...
             </div>
           ) : (

@@ -60,15 +60,15 @@ export default function MonitorPage() {
 
   return (
     <div className="page">
-      <div className="page-header" style={{ marginBottom: "40px" }}>
+      <div className="page-header" style={{ marginBottom: "40px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div>
-          <div className="feature-pill" style={{ color: "var(--accent-secondary)" }}>Live Analysis</div>
-          <h1 className="page-title">Neural Monitor</h1>
+          <div className="feature-pill" style={{ color: "var(--accent-primary)", border: "1px solid var(--accent-primary)", display: "inline-block", padding: "6px 16px", borderRadius: "20px", fontSize: "0.85rem", fontWeight: "600", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "12px" }}>Live Analysis</div>
+          <h1 className="page-title" style={{ fontFamily: "var(--font-serif)", color: "var(--text-bright)", fontSize: "2.5rem" }}>Neural Monitor</h1>
         </div>
         {isStreaming && (
-          <div style={{ padding: "10px 20px", background: "rgba(0,0,0,0.3)", borderRadius: "40px", border: "1px solid var(--glass-border)", display: "flex", alignItems: "center", gap: "10px" }}>
-            <span className="live-dot" />
-            <span style={{ fontSize: "0.85rem", fontWeight: "700" }}>{totalDensity} IN FRAME</span>
+          <div style={{ padding: "10px 20px", background: "var(--bg-card)", borderRadius: "40px", border: "1px solid var(--glass-border)", display: "flex", alignItems: "center", gap: "10px", boxShadow: "0 4px 15px rgba(140, 115, 98, 0.05)" }}>
+            <span className="live-dot" style={{ background: "#22c55e", width: "8px", height: "8px", borderRadius: "50%" }} />
+            <span style={{ fontSize: "0.85rem", fontWeight: "700", color: "var(--text-bright)" }}>{totalDensity} IN FRAME</span>
           </div>
         )}
       </div>
@@ -92,7 +92,7 @@ export default function MonitorPage() {
               <canvas ref={canvasRef} width="960" height="540" className="heatmap-canvas" />
               
               <div style={{ position: "absolute", bottom: "20px", left: "20px", display: "flex", gap: "10px" }}>
-                <div style={{ padding: "6px 12px", background: "rgba(0,0,0,0.6)", backdropFilter: "blur(10px)", borderRadius: "10px", fontSize: "0.7rem", fontWeight: "700" }}>
+                <div style={{ padding: "6px 12px", background: "rgba(255,255,255,0.85)", border: "1px solid rgba(140, 115, 98, 0.2)", borderRadius: "10px", fontSize: "0.7rem", fontWeight: "700", color: "var(--text-bright)" }}>
                   960×540 • 5.2 FPS
                 </div>
               </div>
@@ -101,16 +101,16 @@ export default function MonitorPage() {
 
           {/* Alert Ticker for Mobile */}
           {alerts.length > 0 && (
-            <div className="glass-card">
-              <h3 style={{ fontSize: "1.1rem", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+            <div className="glass-card" style={{ background: "var(--bg-card)", border: "1px solid var(--glass-border)" }}>
+              <h3 style={{ fontSize: "1.1rem", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px", color: "var(--text-bright)", fontFamily: "var(--font-serif)" }}>
                 <span>⚠</span> Incident Timeline
               </h3>
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                 {alerts.slice(-3).reverse().map((a, i) => (
-                  <div key={i} style={{ padding: "14px", background: "rgba(255,255,255,0.03)", borderRadius: "12px", borderLeft: `4px solid ${a.severity === 'HIGH' ? 'var(--accent-danger)' : 'var(--accent-warning)'}` }}>
+                  <div key={i} style={{ padding: "14px", background: "rgba(140, 115, 98, 0.05)", borderRadius: "12px", borderLeft: `4px solid ${a.severity === 'HIGH' ? 'var(--accent-danger)' : 'var(--accent-warning)'}` }}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "4px" }}>
-                      <strong style={{ fontSize: "0.85rem" }}>{a.type}</strong>
-                      <span style={{ fontSize: "0.7rem", color: "var(--text-soft)" }}>{a.timestamp}</span>
+                      <strong style={{ fontSize: "0.85rem", color: "var(--text-bright)" }}>{a.type}</strong>
+                      <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>{a.timestamp}</span>
                     </div>
                     <p style={{ fontSize: "0.8rem", color: "var(--text-soft)", margin: 0 }}>{a.message.substring(0, 80)}...</p>
                   </div>

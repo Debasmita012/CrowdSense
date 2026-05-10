@@ -64,7 +64,7 @@ export default function CrowdGraph({ graphData, gcnScores }) {
     const linkEnter = linkSel
       .enter()
       .append("line")
-      .attr("stroke", "rgba(255,255,255,0.12)")
+      .attr("stroke", "rgba(140, 115, 98, 0.2)")
       .attr("stroke-width", 1);
 
     const allLinks = linkEnter.merge(linkSel);
@@ -83,7 +83,7 @@ export default function CrowdGraph({ graphData, gcnScores }) {
       .enter()
       .append("circle")
       .attr("r", 7)
-      .attr("stroke", "rgba(255,255,255,0.2)")
+      .attr("stroke", "rgba(140, 115, 98, 0.3)")
       .attr("stroke-width", 1);
 
     const allNodes = nodeEnter.merge(nodeSel);
@@ -92,9 +92,9 @@ export default function CrowdGraph({ graphData, gcnScores }) {
     allNodes
       .attr("fill", (d) => {
         const s = score(d.id);
-        if (s > 0.65) return "#ef4444"; // high anomaly → red
-        if (s > 0.35) return "#f59e0b"; // medium → amber
-        return "#aa3bff"; // low → purple
+        if (s > 0.65) return "var(--accent-danger)"; // high anomaly → red
+        if (s > 0.35) return "var(--accent-warning)"; // medium → amber
+        return "var(--accent-primary)"; // low → taupe
       })
       .classed("pulse-red", (d) => score(d.id) > 0.65)
       .classed("pulse-amber", (d) => score(d.id) > 0.35 && score(d.id) <= 0.65);
@@ -123,6 +123,8 @@ export default function CrowdGraph({ graphData, gcnScores }) {
           display: "flex",
           alignItems: "center",
           gap: "8px",
+          color: "var(--text-bright)",
+          fontFamily: "var(--font-serif)"
         }}
       >
         <span
@@ -131,8 +133,7 @@ export default function CrowdGraph({ graphData, gcnScores }) {
             width: "8px",
             height: "8px",
             borderRadius: "50%",
-            background: "var(--accent-purple)",
-            boxShadow: "0 0 8px var(--accent-purple)",
+            background: "var(--accent-primary)",
           }}
         />
         Live Crowd Graph — GCN Anomaly Scores
@@ -142,21 +143,21 @@ export default function CrowdGraph({ graphData, gcnScores }) {
         ref={svgRef}
         width="100%"
         height="300"
-        style={{ display: "block", borderRadius: "8px", background: "rgba(0,0,0,0.2)" }}
+        style={{ display: "block", borderRadius: "8px", background: "rgba(140, 115, 98, 0.05)", border: "1px solid var(--glass-border)" }}
       />
 
       {/* Legend */}
       <div style={{ display: "flex", gap: "16px", marginTop: "10px", fontSize: "0.78rem", color: "var(--text-muted)" }}>
         <span>
-          <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", background: "#aa3bff", marginRight: 4 }} />
+          <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", background: "var(--accent-primary)", marginRight: 4 }} />
           Normal
         </span>
         <span>
-          <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", background: "#f59e0b", marginRight: 4 }} />
+          <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", background: "var(--accent-warning)", marginRight: 4 }} />
           Warning
         </span>
         <span>
-          <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", background: "#ef4444", marginRight: 4, animation: "pulseNode 1s infinite" }} />
+          <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", background: "var(--accent-danger)", marginRight: 4, animation: "pulseNode 1s infinite" }} />
           High Anomaly (pulsing)
         </span>
       </div>

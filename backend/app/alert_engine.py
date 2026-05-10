@@ -29,11 +29,15 @@ class AlertEngine:
             elif atype == "FREEZE_WAVE":
                 narrative = "The crowd has reached critical density and forward movement has completely stopped. This freeze wave is a precursor to a dangerous bottleneck."
                 action = "Immediately halt new entries to this zone and dispatch response teams."
+            elif atype == "DWELL_WARNING":
+                narrative = anomaly["message"]
+                action = "Investigate stationary crowd node immediately to prevent crush."
 
             final_alerts.append({
                 "timestamp": datetime.now().strftime("%H:%M:%S"),
                 "type": atype.replace("_", " "),
                 "severity": anomaly["severity"],
+                "confidence": anomaly.get("confidence", 0),
                 "message": f"Claude AI Analysis: {narrative} Action Required: {action}"
             })
 
