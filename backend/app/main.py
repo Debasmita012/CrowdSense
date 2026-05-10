@@ -7,6 +7,10 @@ import asyncio
 import numpy as np
 import collections
 import time
+import torch
+
+# Force CPU only and limit threads to save memory
+torch.set_num_threads(1)
 
 from fastapi import FastAPI, UploadFile, File, Request
 from fastapi.responses import Response, StreamingResponse

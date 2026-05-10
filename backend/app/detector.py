@@ -3,8 +3,8 @@ from ultralytics import YOLO
 
 class CrowdDetector:
     def __init__(self):
-        # Load lightweight YOLOv8 model
-        self.model = YOLO("yolov8n.pt")
+        # Load lightweight YOLOv8 model from local path
+        self.model = YOLO("app/yolov8n.pt")
 
     def detect(self, frame):
         """
