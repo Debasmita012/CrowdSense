@@ -77,6 +77,15 @@ async def upload_video(file: UploadFile = File(...)):
         "video_id": video_id
     }
 
+# Initialize AI Models globally to save memory
+detector = CrowdDetector()
+tracker = SimpleTracker()
+graph_builder = CrowdGraph()
+anomaly_detector = AnomalyDetector()
+alert_engine = AlertEngine()
+predictor = FlowPredictor(num_zones=100)
+gcn = DynamicCrowdGCN()
+
 async def generate_frames(video_id: str, request: Request):
     state = video_states.get(video_id)
     if not state:
@@ -91,14 +100,6 @@ async def generate_frames(video_id: str, request: Request):
         m, s = divmod(int(duration_sec), 60)
         state["duration"] = f"{m:02d}:{s:02d}"
 
-    detector = CrowdDetector()
-    tracker = SimpleTracker()
-    graph_builder = CrowdGraph()
-    anomaly_detector = AnomalyDetector()
-    alert_engine = AlertEngine()
-    predictor = FlowPredictor(num_zones=100)
-    gcn = DynamicCrowdGCN()
-    
     frames_processed = 0
 
     while True:
