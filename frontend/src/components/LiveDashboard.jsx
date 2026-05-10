@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import AlertPanel from "./AlertPanel";
 import CrowdGraph from "./CrowdGraph";
+import API_BASE from "../config";
 
 export default function LiveDashboard({ videoId }) {
   const [frame, setFrame] = useState(null);
@@ -19,7 +20,7 @@ export default function LiveDashboard({ videoId }) {
   useEffect(() => {
     if (!videoId) return;
 
-    const sse = new EventSource(`http://127.0.0.1:8000/stream/${videoId}`);
+    const sse = new EventSource(`${API_BASE}/stream/${videoId}`);
 
     sse.onmessage = (e) => {
       try {

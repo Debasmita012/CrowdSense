@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
+import API_BASE from "../config";
 
 const StreamContext = createContext(null);
 
@@ -30,7 +31,7 @@ export function StreamProvider({ children }) {
     setAlerts([]);
     setFrameCount(0);
 
-    const sse = new EventSource(`http://127.0.0.1:8000/stream/${videoId}`);
+    const sse = new EventSource(`${API_BASE}/stream/${videoId}`);
     sseRef.current = sse;
 
     sse.onmessage = (e) => {

@@ -1,7 +1,9 @@
+import API_BASE from "../config";
+
 export default function AlertPanel({ alerts, videoId }) {
   const handleGenerateReport = () => {
     if (!videoId) return;
-    window.open(`http://127.0.0.1:8000/report/${videoId}`, '_blank');
+    window.open(`${API_BASE}/report/${videoId}`, '_blank');
   };
 
   return (

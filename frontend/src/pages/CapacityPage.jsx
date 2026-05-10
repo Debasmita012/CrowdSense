@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useStream } from "../context/StreamContext";
+import API_BASE from "../config";
 
 export default function CapacityPage() {
   const { videoId, zoneCapacity, heatmap } = useStream();
@@ -9,7 +10,7 @@ export default function CapacityPage() {
   const handleUpdate = async () => {
     if (!videoId || !newCapacity) return;
     try {
-      await fetch(`http://127.0.0.1:8000/capacity/${videoId}`, {
+      await fetch(`${API_BASE}/capacity/${videoId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ zone_id: selectedZone, capacity: parseInt(newCapacity) })

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useStream } from "../context/StreamContext";
+import API_BASE from "../config";
 
 const SEV_UI = {
   HIGH: { color: "var(--accent-danger)", bg: "rgba(217, 83, 79, 0.1)", icon: "🔴", label: "CRITICAL" },
@@ -18,7 +19,7 @@ export default function AlertsPage() {
     if (!videoId) return;
     setPdfStatus("loading");
     try {
-      const res = await fetch(`http://127.0.0.1:8000/report/${videoId}`);
+      const res = await fetch(`${API_BASE}/report/${videoId}`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);

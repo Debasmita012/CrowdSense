@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useStream } from "../context/StreamContext";
+import API_BASE from "../config";
 
 export default function ReplayPage() {
   const { videoId } = useStream();
@@ -11,7 +12,7 @@ export default function ReplayPage() {
     if (!videoId) return;
     setLoading(true);
     try {
-      const res = await fetch(`http://127.0.0.1:8000/replay/${videoId}`);
+      const res = await fetch(`${API_BASE}/replay/${videoId}`);
       const data = await res.json();
       if (data.replay) {
         setReplayData(data.replay);
